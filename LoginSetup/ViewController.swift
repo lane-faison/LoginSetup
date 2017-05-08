@@ -9,7 +9,7 @@
 import UIKit
 
 class ViewController: UIViewController, FBSDKLoginButtonDelegate {
-
+    
     @IBOutlet weak var profilePicView: UIImageView!
     
     let loginButton: FBSDKLoginButton = {
@@ -24,7 +24,7 @@ class ViewController: UIViewController, FBSDKLoginButtonDelegate {
         view.addSubview(loginButton)
         loginButton.center = view.center
         loginButton.delegate = self
-
+        
         if let token = FBSDKAccessToken.current() {
             fetchProfile()
         }
@@ -35,7 +35,7 @@ class ViewController: UIViewController, FBSDKLoginButtonDelegate {
         
         let parameters = ["fields": "email, first_name, last_name, picture.type(large)"]
         FBSDKGraphRequest(graphPath: "me", parameters: parameters).start { (connection, result, error) -> Void in
-        
+            
             if error != nil {
                 print(error!)
                 return
@@ -52,23 +52,9 @@ class ViewController: UIViewController, FBSDKLoginButtonDelegate {
             if let fbLast = (result as AnyObject)["first_name"]! as? String {
                 print(fbLast)
             }
-            
-//            if let fbPic = (result as AnyObject)["picture.type(large)"]! {
-//                self.profilePicView = fbPic as! UIImageView
-//            }
-            
-//            if let picture = result["picture"] as? NSDictionary, data = picture["data"] as? NSDictionary, url = data["url"] as? String {
-//                print(url)
-//            }
-
-            if let fbPicture = (result as AnyObject)["picture"]! as? NSDictionary, let data = (fbPicture as AnyObject)["data"]! as? NSDictionary, let url = (data as AnyObject)["url"]! as? String {
-                
-                print(url)
-                
-            }
         }
     }
-
+    
     func loginButton(_ loginButton: FBSDKLoginButton!, didCompleteWith result: FBSDKLoginManagerLoginResult!, error: Error!) {
         print("completed login")
         fetchProfile()
@@ -81,6 +67,5 @@ class ViewController: UIViewController, FBSDKLoginButtonDelegate {
     func loginButtonWillLogin(_ loginButton: FBSDKLoginButton!) -> Bool {
         return true
     }
-
 }
 
