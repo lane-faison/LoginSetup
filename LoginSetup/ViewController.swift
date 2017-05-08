@@ -10,6 +10,8 @@ import UIKit
 
 class ViewController: UIViewController, FBSDKLoginButtonDelegate {
 
+    @IBOutlet weak var profilePicView: UIImageView!
+    
     let loginButton: FBSDKLoginButton = {
         let button = FBSDKLoginButton()
         button.readPermissions = ["email"]
@@ -39,8 +41,30 @@ class ViewController: UIViewController, FBSDKLoginButtonDelegate {
                 return
             }
             
-            if let fbemail = (result as AnyObject)["email"]! as? String {
-                print(fbemail)
+            if let fbEmail = (result as AnyObject)["email"]! as? String {
+                print(fbEmail)
+            }
+            
+            if let fbFirst = (result as AnyObject)["last_name"]! as? String {
+                print(fbFirst)
+            }
+            
+            if let fbLast = (result as AnyObject)["first_name"]! as? String {
+                print(fbLast)
+            }
+            
+//            if let fbPic = (result as AnyObject)["picture.type(large)"]! {
+//                self.profilePicView = fbPic as! UIImageView
+//            }
+            
+//            if let picture = result["picture"] as? NSDictionary, data = picture["data"] as? NSDictionary, url = data["url"] as? String {
+//                print(url)
+//            }
+
+            if let fbPicture = (result as AnyObject)["picture"]! as? NSDictionary, let data = (fbPicture as AnyObject)["data"]! as? NSDictionary, let url = (data as AnyObject)["url"]! as? String {
+                
+                print(url)
+                
             }
         }
     }
