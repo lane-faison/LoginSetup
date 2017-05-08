@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+class ViewController: UIViewController, FBSDKLoginButtonDelegate {
 
     let loginButton: FBSDKLoginButton = {
         let button = FBSDKLoginButton()
@@ -21,16 +21,42 @@ class ViewController: UIViewController {
         
         view.addSubview(loginButton)
         loginButton.center = view.center
+        loginButton.delegate = self
 
+        if let token = FBSDKAccessToken.current() {
+            fetchProfile()
+        }
+    }
     
-    
+    func fetchProfile() {
+        print("fetch profile")
+        
+        let parameters = ["fields": "email, first_name, last_name, picture.type(large)"]
+        FBSDKGraphRequest(graphPath: "me", parameters: parameters).start { (connection, result, error) -> Void in
+        
+            if error != nil {
+                print(error!)
+                return
+            }
+            
+            if let fbemail = (result as AnyObject)["email"]! as? String {
+                print(fbemail)
+            }
+        }
     }
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+    func loginButton(_ loginButton: FBSDKLoginButton!, didCompleteWith result: FBSDKLoginManagerLoginResult!, error: Error!) {
+        print("completed login")
+        fetchProfile()
     }
-
+    
+    func loginButtonDidLogOut(_ loginButton: FBSDKLoginButton!) {
+        
+    }
+    
+    func loginButtonWillLogin(_ loginButton: FBSDKLoginButton!) -> Bool {
+        return true
+    }
 
 }
 
